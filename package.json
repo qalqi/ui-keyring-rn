@@ -10,6 +10,7 @@
   "contributors": [],
   "license": "Apache-2.0",
   "dependencies": {
+    "@babel/helper-annotate-as-pure": "^7.0.0",
     "@babel/runtime": "^7.5.4",
     "@types/mkdirp": "^0.5.2",
     "@types/store": "^2.0.2",
