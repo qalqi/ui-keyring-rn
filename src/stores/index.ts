@@ -4,4 +4,3 @@
 
 export { default as BrowserStore } from './Browser';
 export { default as ExtensionStore } from './Extension';
-export { default as FileStore } from './File';
