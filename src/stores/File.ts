@@ -4,7 +4,12 @@
 
 import { KeyringStore, KeyringJson } from '../types';
 
-import fs from 'fs';
+try {
+  var fs = require('fs');
+  // do stuff
+} catch (ex) {
+  console.log(ex);
+}
 import mkdirp from 'mkdirp';
 import path from 'path';
 
@@ -12,7 +17,7 @@ import path from 'path';
 export default class FileStore implements KeyringStore {
   private _path: string;
 
-  public constructor (path: string) {
+  public constructor(path: string) {
     if (!fs.existsSync(path)) {
       mkdirp.sync(path);
     }
@@ -20,7 +25,7 @@ export default class FileStore implements KeyringStore {
     this._path = path;
   }
 
-  public all (cb: (key: string, value: KeyringJson) => void): void {
+  public all(cb: (key: string, value: KeyringJson) => void): void {
     fs
       .readdirSync(this._path)
       .filter((key): boolean => !['.', '..'].includes(key))
@@ -29,25 +34,25 @@ export default class FileStore implements KeyringStore {
       });
   }
 
-  public get (key: string, cb: (value: KeyringJson) => void): void {
+  public get(key: string, cb: (value: KeyringJson) => void): void {
     cb(this._readKey(key));
   }
 
-  public remove (key: string, cb?: () => void): void {
+  public remove(key: string, cb?: () => void): void {
     fs.unlinkSync(this._getPath(key));
     cb && cb();
   }
 
-  public set (key: string, value: KeyringJson, cb?: () => void): void {
+  public set(key: string, value: KeyringJson, cb?: () => void): void {
     fs.writeFileSync(this._getPath(key), Buffer.from(JSON.stringify(value), 'utf-8'));
     cb && cb();
   }
 
-  private _getPath (key: string): string {
+  private _getPath(key: string): string {
     return path.join(this._path, key);
   }
 
-  private _readKey (key: string): KeyringJson {
+  private _readKey(key: string): KeyringJson {
     return JSON.parse(
       fs.readFileSync(this._getPath(key)).toString('utf-8')
     );
